@@ -1,1 +1,2 @@
-# AcaciaInstaller - AcaicaLinux Installer written in GTK
+# AcaciaInstaller - The AcaicaLinux Installer
+Possible names: seed
