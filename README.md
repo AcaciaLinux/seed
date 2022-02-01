@@ -1,2 +1,2 @@
-# AcaciaInstaller - The AcaicaLinux Installer
+# Seed - The AcaicaLinux Installer
 Possible names: seed
