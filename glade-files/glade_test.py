@@ -17,6 +17,6 @@ builder.add_from_file("./glade-files/template.glade")
 builder.connect_signals(Handler())
 
 window = builder.get_object("window")
-window.show_all()
+#window.show_all()
 
 Gtk.main()
