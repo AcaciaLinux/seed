@@ -43,10 +43,7 @@ impl Validate for DiskConf {
         match self.action {
             DiskAction::Locked | DiskAction::Keep | DiskAction::Alter => {
                 if self.table.is_some() {
-                    return Err(ValidationError::new(
-                        self.path.as_str(),
-                        "Can only alter partition table in 'new' mode",
-                    ));
+                    warn!("{}: Ignoring 'table': Not allowed in this mode", self.path);
                 }
             },
             DiskAction::New => {

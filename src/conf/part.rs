@@ -68,30 +68,21 @@ impl Validate for PartConf {
             //When keeping, the size can't be altered and the fs can't be changed
             PartAction::Keep => {
                 if self.size.is_some() {
-                    return Err(ValidationError::new(
-                        self.index.to_string().as_str(),
-                        "'size' not allowed when partition action is set to 'keep'",
-                    ));
+                    warn!("Partition {}: Ignoring 'size': Not allowed in this mode", self.index);
                 }
                 if self.fs.is_some() {
-                    return Err(ValidationError::new(
-                        self.index.to_string().as_str(),
-                        "'fs' not allowed when partition action is set to 'keep'",
-                    ));
+                    warn!("Partition {}: Ignoring 'fs': Not allowed in this mode", self.index);
                 }
             }
             //When formatting, changing the filesystem is allowed, but the size remains the same
             PartAction::Format => {
                 if self.size.is_some() {
-                    return Err(ValidationError::new(
-                        self.index.to_string().as_str(),
-                        "'size' not allowed when partition action is set to 'format'",
-                    ));
+                    warn!("Partition {}: Ignoring 'size': Not allowed in this mode", self.index);
                 }
                 if self.fs.is_none() {
                     return Err(ValidationError::new(
                         self.index.to_string().as_str(),
-                        "'fs' required when partition action is set to 'format'",
+                        "'fs' is required when partition action is set to 'format'",
                     ));
                 }
             }
@@ -100,14 +91,11 @@ impl Validate for PartConf {
                 if self.size.is_none() {
                     return Err(ValidationError::new(
                         self.index.to_string().as_str(),
-                        "'size' required when action is 'resize'",
+                        "'size' is required when action is 'resize'",
                     ));
                 }
                 if self.fs.is_some() {
-                    return Err(ValidationError::new(
-                        self.index.to_string().as_str(),
-                        "'fs' not allowed when partition action is set to 'resize'",
-                    ));
+                    warn!("Partition {}: Ignoring 'gs': Not allowed in this mode", self.index);
                 }
             }
             //When creating, size is needed, fs only when mounted
@@ -115,13 +103,13 @@ impl Validate for PartConf {
                 if self.size.is_none() {
                     return Err(ValidationError::new(
                         self.index.to_string().as_str(),
-                        "'size' required when action is 'create'",
+                        "'size' is required when action is 'create'",
                     ));
                 }
                 if self.mount.is_some() && self.fs.is_none() {
                     return Err(ValidationError::new(
                         self.index.to_string().as_str(),
-                        "'fs' required when 'new' partition is mounted",
+                        "'fs' is required when new partition is mounted",
                     ));
                 }
             }
