@@ -1,6 +1,8 @@
-mod installfile;
+mod conf;
+mod diskmgr;
 
-use installfile::*;
+use conf::installfile::*;
+use diskmgr::diskmanager;
 
 extern crate pretty_env_logger;
 #[macro_use]
@@ -17,7 +19,7 @@ fn main() {
             Ok(c) => c,
             Err(e) => {
                 error!("Failed to parse InstallFile: {}", e.to_string());
-                panic!();
+                return;
             }
         };
 
@@ -25,7 +27,15 @@ fn main() {
         Ok(_) => info!("Installation file is valid"),
         Err(e) => {
             error!("{}", e.to_string());
-            panic!()
+            return;
         }
     }
+
+    match diskmanager::configure_disks(&conf.seed) {
+        Ok(_) => info!("Configured disks"),
+        Err(e) => {
+            error!("{}", e.to_string());
+            return;
+        }
+    };
 }
