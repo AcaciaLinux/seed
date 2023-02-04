@@ -1,6 +1,6 @@
-pub mod size;
-pub mod part;
 pub mod disk;
-pub mod validate;
-pub mod seed;
 pub mod installfile;
+pub mod part;
+pub mod seed;
+pub mod size;
+pub mod validate;

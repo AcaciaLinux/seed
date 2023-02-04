@@ -1,10 +1,9 @@
-
-use serde::{Serialize, Deserialize, Deserializer};
-use serde::de;
-use std::fmt;
-use std::collections::HashMap;
-pub use super::validate::*;
 pub use super::disk::*;
+pub use super::validate::*;
+use serde::de;
+use serde::{Deserialize, Deserializer, Serialize};
+use std::collections::HashMap;
+use std::fmt;
 
 #[derive(Serialize, Debug, PartialEq)]
 pub enum FSTabMode {
@@ -19,7 +18,6 @@ pub const FSTAB_MODES: &'static [&'static str] = &["uuid", "label", "device"];
 pub struct EnvConf {
     pub chrootcmd: Option<String>,
 }
-
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct InstallationConf {

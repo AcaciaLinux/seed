@@ -1,9 +1,8 @@
-
-use serde::{Serialize, Deserialize, Deserializer};
-use serde::de::{self, Visitor};
-use std::fmt;
-use super::validate::{Validate, ValidationError};
 pub use super::size::*;
+use super::validate::{Validate, ValidationError};
+use serde::de::{self, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
+use std::fmt;
 
 #[derive(Serialize, Debug)]
 pub enum PartTotal {
@@ -68,16 +67,25 @@ impl Validate for PartConf {
             //When keeping, the size can't be altered and the fs can't be changed
             PartAction::Keep => {
                 if self.size.is_some() {
-                    warn!("Partition {}: Ignoring 'size': Not allowed in this mode", self.index);
+                    warn!(
+                        "Partition {}: Ignoring 'size': Not allowed in this mode",
+                        self.index
+                    );
                 }
                 if self.fs.is_some() {
-                    warn!("Partition {}: Ignoring 'fs': Not allowed in this mode", self.index);
+                    warn!(
+                        "Partition {}: Ignoring 'fs': Not allowed in this mode",
+                        self.index
+                    );
                 }
             }
             //When formatting, changing the filesystem is allowed, but the size remains the same
             PartAction::Format => {
                 if self.size.is_some() {
-                    warn!("Partition {}: Ignoring 'size': Not allowed in this mode", self.index);
+                    warn!(
+                        "Partition {}: Ignoring 'size': Not allowed in this mode",
+                        self.index
+                    );
                 }
                 if self.fs.is_none() {
                     return Err(ValidationError::new(
@@ -95,7 +103,10 @@ impl Validate for PartConf {
                     ));
                 }
                 if self.fs.is_some() {
-                    warn!("Partition {}: Ignoring 'gs': Not allowed in this mode", self.index);
+                    warn!(
+                        "Partition {}: Ignoring 'gs': Not allowed in this mode",
+                        self.index
+                    );
                 }
             }
             //When creating, size is needed, fs only when mounted

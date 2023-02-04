@@ -1,8 +1,7 @@
-
-use serde::{Serialize, Deserialize, Deserializer, de};
-use std::fmt;
 pub use super::part::*;
 use super::validate::*;
+use serde::{de, Deserialize, Deserializer, Serialize};
+use std::fmt;
 
 /// The possible actions that can be performed on a disk
 #[derive(Serialize, Debug, PartialEq)]

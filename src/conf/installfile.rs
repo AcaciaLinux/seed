@@ -1,6 +1,5 @@
-
-use serde::{Deserialize, Serialize};
 pub use super::seed::*;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct InstallFile {
@@ -12,6 +11,3 @@ impl Validate for InstallFile {
         self.seed.validate()
     }
 }
-
-
-
