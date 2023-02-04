@@ -44,7 +44,7 @@ impl Validate for DiskConf {
                 if self.table.is_some() {
                     warn!("{}: Ignoring 'table': Not allowed in this mode", self.path);
                 }
-            },
+            }
             DiskAction::New => {
                 if self.table.is_none() {
                     return Err(ValidationError::new(
