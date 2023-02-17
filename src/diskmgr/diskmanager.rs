@@ -1,3 +1,4 @@
+use super::filesystem::*;
 pub use super::part::configure_partitions;
 use crate::conf::seed::*;
 use libparted::*;
@@ -13,11 +14,19 @@ pub fn configure_disks(conf: &SeedConf) -> Result<(), io::Error> {
         let p_dev_sector_size = p_dev.sector_size();
         let mut p_disk = create_disk(&mut p_dev, cur_disk_conf)?;
 
+        //Iterate over the partitions to create them
         for cur_part_conf in &cur_disk_conf.partitions {
             configure_partitions(&mut p_disk, cur_part_conf, p_dev_sector_size)?;
         }
+
+        //Commit that to disk
         p_disk.commit_to_dev()?;
         p_disk.commit_to_os()?;
+
+        //And now create filesystems on the new partitions
+        for cur_part_conf in &cur_disk_conf.partitions {
+            create_filesystem(cur_disk_conf, cur_part_conf)?;
+        }
     }
 
     Ok(())
