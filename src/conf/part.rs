@@ -66,41 +66,6 @@ impl PartConf {
     fn context(&self) -> String {
         format!("Partition {}", self.index)
     }
-
-    /// Checks if the filesystem supplied to this config is available on the system
-    fn check_fs_available(&self) -> Result<(), ValidationError> {
-        // Retrieve the filesystem
-        let fs = match &self.fs {
-            Some(s) => s,
-            None => {
-                return Err(ValidationError::new(
-                    &self.context(),
-                    "'fs' entry is needed for checking filesystem availability",
-                ));
-            }
-        };
-
-        // Retrieve the list of available filesystems
-        let filesystems = match util::get_available_filesystems() {
-            Ok(f) => f,
-            Err(e) => {
-                return Err(ValidationError::new(
-                    &self.context(),
-                    &format!("Unable to query available filesystems: {}", e.to_string()),
-                ));
-            }
-        };
-
-        //Check if the filesystem is contained
-        if !filesystems.contains(fs) {
-            Err(ValidationError::new(
-                &self.context(),
-                &format!("Filesystem {fs} is not available on the system"),
-            ))
-        } else {
-            Ok(())
-        }
-    }
 }
 
 impl Validate for PartConf {
@@ -135,8 +100,6 @@ impl Validate for PartConf {
                         self.index.to_string().as_str(),
                         "'fs' is required when partition action is set to 'format'",
                     ));
-                } else {
-                    self.check_fs_available()?;
                 }
             }
             //When resizing, a size is required, but fs can't be changed
@@ -168,8 +131,6 @@ impl Validate for PartConf {
                             self.index.to_string().as_str(),
                             "'fs' is required when new partition is mounted",
                         ));
-                    } else {
-                        self.check_fs_available()?;
                     }
                 }
             }
