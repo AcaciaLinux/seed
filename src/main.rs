@@ -1,12 +1,12 @@
+extern crate pretty_env_logger;
+#[macro_use]
+extern crate log;
+
 mod conf;
 mod diskmgr;
 
 use conf::installfile::*;
-use diskmgr::diskmanager;
-
-extern crate pretty_env_logger;
-#[macro_use]
-extern crate log;
+use diskmgr::*;
 
 fn main() {
     if std::env::var("RUST_LOG").is_err() {
