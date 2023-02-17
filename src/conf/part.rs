@@ -1,6 +1,5 @@
 pub use super::size::*;
 use super::validate::{Validate, ValidationError};
-use crate::diskmgr::util;
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use std::fmt;
@@ -76,14 +75,14 @@ impl Validate for PartConf {
             PartAction::Keep => {
                 if self.size.is_some() {
                     warn!(
-                        "Partition {}: Ignoring 'size': Not allowed in this mode",
-                        self.index
+                        "{} Ignoring 'size': Not allowed in this mode",
+                        self.context()
                     );
                 }
                 if self.fs.is_some() {
                     warn!(
-                        "Partition {}: Ignoring 'fs': Not allowed in this mode",
-                        self.index
+                        "{} Ignoring 'fs': Not allowed in this mode",
+                        self.context()
                     );
                 }
             }
@@ -91,8 +90,8 @@ impl Validate for PartConf {
             PartAction::Format => {
                 if self.size.is_some() {
                     warn!(
-                        "Partition {}: Ignoring 'size': Not allowed in this mode",
-                        self.index
+                        "{} Ignoring 'size': Not allowed in this mode",
+                        self.context()
                     );
                 }
                 if self.fs.is_none() {
@@ -112,7 +111,7 @@ impl Validate for PartConf {
                 }
                 if self.fs.is_some() {
                     warn!(
-                        "Partition {}: Ignoring 'gs': Not allowed in this mode",
+                        "{} Ignoring 'gs': Not allowed in this mode",
                         self.index
                     );
                 }
