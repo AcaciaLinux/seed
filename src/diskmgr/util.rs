@@ -1,7 +1,5 @@
 use crate::conf::part::*;
 use libparted::*;
-use std::fs::File;
-use std::io::{prelude::*, BufReader};
 
 ///	Converts the provided byte count to sector count by aligning to next sector
 /// If the count doesn't fit perfectly into the sector, the sector count will be higher
@@ -46,21 +44,4 @@ pub fn get_part_size_sectors(p_size: &PartSize, sector_size: u64) -> i64 {
         },
         sector_size,
     ) as i64
-}
-
-/// Queries `/proc/filesystems` to find out about the available filesystems
-pub fn get_available_filesystems() -> Result<Vec<String>, std::io::Error> {
-    let file = File::open("/proc/filesystems")?;
-    let reader = BufReader::new(file);
-
-    let mut lines: Vec<String> = vec![];
-
-    for line in reader.lines() {
-        let l: String = line?.as_str().to_owned();
-        if !l.contains("nodev") {
-            lines.push(l.trim().to_owned());
-        }
-    }
-
-    return Ok(lines);
 }
