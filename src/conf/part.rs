@@ -56,6 +56,7 @@ pub struct PartConf {
     pub action: PartAction,
     pub size: Option<PartSize>,
     pub fs: Option<String>,
+    pub fsargs: Option<String>,
     pub mount: Option<String>,
     pub fstab: Option<bool>,
 }
