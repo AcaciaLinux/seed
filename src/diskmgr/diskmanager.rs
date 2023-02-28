@@ -7,26 +7,42 @@ use std::io;
 /// Configures the disks from the seedconf
 /// # Arguments
 /// * `conf` - The config to implement
-pub fn configure_disks(conf: &SeedConf) -> Result<(), io::Error> {
+pub fn configure_disks(conf: &mut SeedConf) -> Result<(), io::Error> {
     //Iterate over every disk
-    for cur_disk_conf in &conf.disks {
+    //for cur_disk_conf in &conf.disks {
+    for cur_disk_index in 0..conf.disks.len() {
+        let cur_disk_conf = &mut conf.disks[cur_disk_index];
         let mut p_dev = Device::new(&cur_disk_conf.path)?;
         let p_dev_sector_size = p_dev.sector_size();
-        let mut p_disk = create_disk(&mut p_dev, cur_disk_conf)?;
+        let mut p_disk = create_disk(&mut p_dev, &cur_disk_conf)?;
 
         //Iterate over the partitions to create them
         for cur_part_conf in &cur_disk_conf.partitions {
             configure_partitions(&mut p_disk, cur_part_conf, p_dev_sector_size)?;
         }
 
+        info!("Commiting to disk...");
         //Commit that to disk
-        p_disk.commit_to_dev()?;
-        p_disk.commit_to_os()?;
+        p_disk.commit()?;
 
-        //And now create filesystems on the new partitions
+        //Drop the disk and the device to force a sync operation
+        drop(p_disk);
+        drop(p_dev);
+
+        crate::libc::sync();
+
+        //Create filesystems on the new partitions
         for cur_part_conf in &cur_disk_conf.partitions {
-            create_filesystem(cur_disk_conf, cur_part_conf)?;
+            //Only if action is CREATE or FORMAT
+            match cur_part_conf.action {
+                PartAction::Create | PartAction::Format => {
+                    create_filesystem(&cur_disk_conf, cur_part_conf)?
+                }
+                _ => (),
+            }
         }
+
+        crate::libc::sync();
     }
 
     Ok(())
