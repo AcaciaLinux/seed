@@ -57,8 +57,8 @@ impl PartConf {
 impl SeedConf {
     /// Mounts the partitions of the seed config in the correct order
     pub fn mount_partitions(&mut self) -> std::io::Result<()> {
-        let mut cur_d: usize = 0;
-        let mut max_d: usize = 1;
+        let mut cur_d: usize = 1;
+        let mut max_d: usize = 2;
 
         loop {
             for cur_disk_id in 0..self.disks.len() {
