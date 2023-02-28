@@ -32,7 +32,7 @@ fn main() {
         }
     }
 
-    match diskmanager::configure_disks(&conf.seed) {
+    match diskmanager::configure_disks(&mut conf.seed) {
         Ok(_) => info!("Configured disks"),
         Err(e) => {
             error!("{}", e.to_string());
