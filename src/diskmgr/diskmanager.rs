@@ -45,6 +45,9 @@ pub fn configure_disks(conf: &mut SeedConf) -> Result<(), io::Error> {
         crate::libc::sync();
     }
 
+    conf.mount_partitions()?;
+    crate::libc::sync();
+
     Ok(())
 }
 
