@@ -38,6 +38,7 @@ impl PartConf {
     pub fn unmount(&mut self) -> std::io::Result<()> {
         match &self.mount_point {
             Some(s) => {
+                debug!("Unmounting {}", self.mount.as_ref().unwrap());
                 s.unmount(UnmountFlags::empty())?;
                 self.mount_point = None;
                 Ok(())
