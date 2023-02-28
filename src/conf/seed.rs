@@ -70,6 +70,17 @@ impl Validate for SeedConf {
     }
 }
 
+impl Drop for SeedConf {
+    fn drop(&mut self) {
+        match self.unmount_partitions() {
+            Ok(_) => (),
+            Err(e) => {
+                error!("Failed to unmount remaining partitions! The system may be in a uncontrolled state! (error: {})", e.to_string());
+            }
+        }
+    }
+}
+
 ///	Matches a string of the fstab mode value to the correct FSTabMode
 /// # Arguments
 /// * `value` - The value to match
