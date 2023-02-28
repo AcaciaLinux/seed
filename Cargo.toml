@@ -12,3 +12,4 @@ edition = "2021"
 	libparted = "0.1.5"
 	serde_json = "1.0.91"
 	serde = { version = "1.0.152", features = ["derive"] }
+	libc = "0.2.139"

@@ -4,6 +4,7 @@ extern crate log;
 
 mod conf;
 mod diskmgr;
+mod libc;
 
 use conf::installfile::*;
 use diskmgr::*;
