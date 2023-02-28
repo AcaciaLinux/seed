@@ -3,6 +3,7 @@ use super::validate::{Validate, ValidationError};
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use std::fmt;
+use sys_mount::*;
 
 #[derive(Serialize, Debug)]
 pub enum PartTotal {
@@ -59,6 +60,10 @@ pub struct PartConf {
     pub fsargs: Option<String>,
     pub mount: Option<String>,
     pub fstab: Option<bool>,
+
+    #[serde(skip_serializing)]
+    #[serde(skip_deserializing)]
+    pub mount_point: Option<Mount>,
 }
 
 impl PartConf {
