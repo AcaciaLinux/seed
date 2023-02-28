@@ -86,10 +86,7 @@ impl Validate for PartConf {
                     );
                 }
                 if self.fs.is_some() {
-                    warn!(
-                        "{} Ignoring 'fs': Not allowed in this mode",
-                        self.context()
-                    );
+                    warn!("{} Ignoring 'fs': Not allowed in this mode", self.context());
                 }
             }
             //When formatting, changing the filesystem is allowed, but the size remains the same
@@ -116,10 +113,7 @@ impl Validate for PartConf {
                     ));
                 }
                 if self.fs.is_some() {
-                    warn!(
-                        "{} Ignoring 'gs': Not allowed in this mode",
-                        self.index
-                    );
+                    warn!("{} Ignoring 'gs': Not allowed in this mode", self.index);
                 }
             }
             //When creating, size is needed, fs only when mounted
