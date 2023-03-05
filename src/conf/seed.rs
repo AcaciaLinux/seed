@@ -49,6 +49,9 @@ pub struct LangConf {
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SeedConf {
+    #[serde(default = "seed_default_workdir")]
+    pub workdir: String,
+
     pub env: EnvConf,
     pub disks: Vec<DiskConf>,
     pub installation: InstallationConf,
@@ -93,6 +96,13 @@ fn match_fstab_mode(value: &str) -> Result<FSTabMode, &str> {
         "device" => Ok(FSTabMode::Device),
         _ => Err(value),
     }
+}
+
+/// Returns the default value for the working directory
+/// # Returns
+/// Default workdir for seed: "./seed_workdir/"
+fn seed_default_workdir() -> String{
+    "./seed_workdir/".to_owned()
 }
 
 //
