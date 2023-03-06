@@ -22,7 +22,8 @@ pub struct EnvConf {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct InstallationConf {
     pub pkglisturl: Option<String>,
-    pub packages: Option<Vec<String>>,
+    pub packages: Vec<String>,
+    pub force: Option<bool>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -101,7 +102,7 @@ fn match_fstab_mode(value: &str) -> Result<FSTabMode, &str> {
 /// Returns the default value for the working directory
 /// # Returns
 /// Default workdir for seed: "./seed_workdir/"
-fn seed_default_workdir() -> String{
+fn seed_default_workdir() -> String {
     "./seed_workdir/".to_owned()
 }
 
