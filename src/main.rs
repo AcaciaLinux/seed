@@ -33,14 +33,14 @@ fn main() {
     pretty_env_logger::init();
 
     let mut conf: InstallFile =
-        match serde_json::from_str(std::fs::read_to_string("install.json").unwrap().as_str()) {
+        match serde_json::from_str(std::fs::read_to_string(args.file).unwrap().as_str()) {
             Ok(c) => c,
             Err(e) => {
                 error!("Failed to parse InstallFile: {}", e.to_string());
                 return;
             }
         };
-    conf.seed.workdir = "/root/".to_owned();
+    conf.seed.workdir = args.workdir;
 
     match conf.validate() {
         Ok(_) => info!("Installation file is valid"),
