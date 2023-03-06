@@ -4,6 +4,7 @@ extern crate log;
 
 mod conf;
 mod diskmgr;
+mod leaf;
 mod libc;
 
 use conf::installfile::*;
@@ -40,4 +41,12 @@ fn main() {
             return;
         }
     };
+
+    match leaf::leaf_install_system(&conf.seed) {
+        Ok(_) => info!("Installed system"),
+        Err(e) => {
+            error!("{}", e.to_string());
+            return;
+        }
+    }
 }
