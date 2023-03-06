@@ -14,3 +14,4 @@ edition = "2021"
 	serde = { version = "1.0.152", features = ["derive"] }
 	libc = "0.2.139"
 	sys-mount = "2.0.2"
+	clap = { version = "4.1.8", features = ["derive"] }

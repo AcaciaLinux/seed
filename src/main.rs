@@ -10,7 +10,23 @@ mod libc;
 use conf::installfile::*;
 use diskmgr::*;
 
+use clap::Parser;
+
+/// The AcaciaLinux installer daemon
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// The directory seed should mount its root
+    #[arg(short, long, default_value = "./seed_workdir/")]
+    workdir: String,
+
+    /// The installfile to process
+    file: String,
+}
+
 fn main() {
+    let args = Args::parse();
+
     if std::env::var("RUST_LOG").is_err() {
         std::env::set_var("RUST_LOG", "trace")
     }
