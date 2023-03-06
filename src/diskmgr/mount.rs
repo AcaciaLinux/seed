@@ -124,9 +124,9 @@ impl SeedConf {
                     }
 
                     if mount_depth == cur_d {
-						if cur_part.is_mounted(){
-							cur_part.unmount()?;
-						}
+                        if cur_part.is_mounted() {
+                            cur_part.unmount()?;
+                        }
                     }
                 }
             }
