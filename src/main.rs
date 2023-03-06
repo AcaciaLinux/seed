@@ -23,6 +23,7 @@ fn main() {
                 return;
             }
         };
+    conf.seed.workdir = "/root/".to_owned();
 
     match conf.validate() {
         Ok(_) => info!("Installation file is valid"),
