@@ -9,7 +9,7 @@ pub use crate::conf::part::PartConf;
 pub use crate::conf::seed::SeedConf;
 
 impl PartConf {
-    pub fn mount(&mut self, disk_path: &str) -> std::io::Result<()> {
+    pub fn mount(&mut self, workdir: &str, disk_path: &str) -> std::io::Result<()> {
         let mount = match &self.mount {
             Some(m) => Ok(m),
             None => Err(Error::new(
@@ -19,7 +19,7 @@ impl PartConf {
         }?;
 
         let mount_source = format!("{}{}", disk_path, self.index);
-        let mount_point = format!("/root/mount{}", mount);
+        let mount_point = format!("{}/mount/{}", workdir, mount);
 
         if self.mount_point.is_some() {
             return Err(Error::new(
@@ -82,7 +82,7 @@ impl SeedConf {
                     }
 
                     if mount_depth == cur_d {
-                        cur_part.mount(&cur_disk.path)?;
+                        cur_part.mount(&self.workdir, &cur_disk.path)?;
                     }
                 }
             }
