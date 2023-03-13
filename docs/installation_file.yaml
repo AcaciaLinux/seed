@@ -1,0 +1,81 @@
+#!seed
+
+version: 1 # The version of this file
+
+seed: # Indicates that the seed file starts here
+# Gets processed from top to bottom in the order as described in this file.
+
+  env: # Setup environment variables
+    chrootcmd: systemd-nspawn -d {ROOTDIR} {COMMAND} # The command to use for chrooting into the new system
+    # - {ROOTDIR}: The absolute path to the newly installed system
+    # - {COMMAND}: The command to execute in the chroot environment
+    # Gets used for leaf too
+
+  disks: # Setup the disks
+    - /dev/sda: # The disk /dev/sda
+      action: alter # Can be [alter, keep, locked, new]
+      # - 'alter'   Alters the partitions on the system
+      # - 'keep'    Forbids any modificatins to the filesystem, no changes in layout ('size' gets ignored)
+      # - 'locked'  Forbids any changes to the filesystem, just mounting (only 'mount' and 'fstab' get used)
+      # - 'new'     Creates a new partition table on the disk ('table' is required)
+      table: gpt
+
+      partitions: # Describe the partitions on that disk
+
+        - /dev/sda1: # The first partition on the diskk
+          action: shrink # The action to perform on the partition
+            # Can be [keep, shrink, create]
+          size: 500M # The new size for the partition
+            # Sizes can be [B, K, M, G, T, %, %%, min, max]
+            # - If '%' is specified, the partition size gets calculated from the total disk size
+            # - If '%%' is specified, the partition size gets calculated from
+            #   the amount of space remaining from upper partitions (in this file, not the real disk)
+            # - If 'min' (shrink only) is specified, the size is the absolute minimum
+            #   for the remaining partition to not corrupt it
+            # - If 'max' is specified, this uses all the remaining space from the disk.
+            #   Partitions specified after this will result in an error
+          fs: fat # The filesystem to use
+            # - If this is 'keep', the filesystem gets reused
+            # This piece gets appended to the mkfs.<fs> command
+          fsargs: -F32 # Additional arguments for the mkfs command
+          mount: /boot/efi # Where to mount the partition on the target system
+            # Can be omitted if the partition should not be mounted
+          fstab: true # If this parition should enter the fstab
+            # This lets the target system mount the partition automatically
+            # Default if omitted: false
+
+  installation: # Describe the installation leaf should perform
+    pkglisturl: https://api.acacialinux.org/?get=pkglist # The URL to use for fetching the package list
+    packages: # All the packages to install
+      - base
+      - bash
+      - systemd
+      - networkmanager
+
+  fstab: # The fstab to generate
+    mode: uuid # The mode for the fstab
+    # Can be [uuid, label, device]
+    # - 'uuid':   Use the partition UUID (UUID=) (recommended, default)
+    # - 'label'   Use the label (LABEL=) of the partitions
+    # - 'device'  Use the device identifier eg. /dev/sda1 (not recommended)
+    path: /etc/fstab
+    # The path to store the fstab in
+    # Default: /etc/fstab
+
+  systemd: # Configure systemd
+    enable-units: # Which units to enable for the next start
+      - sshd
+      - seed
+      - NetworkManager
+
+  symlinks: # Some symlinks that should be created (source:target)
+    - /usr/bin/doas: /usr/bin/sudo
+
+  time: # Creates a symlink from /usr/share/zoneinfo/<timezone> to /etc/locatime
+    timezone: Europe/Berlin
+
+  lang: # Sets the language
+    default: en_US.UTF-8 # The default language to use (/etc/locale.conf)
+    locales: # The entries to add in /etc/locale-gen before running /usr/bin/locale-gen
+      - en_US.UTF-8 UTF-8
+      - de_DE.UTF-8 UTF-8

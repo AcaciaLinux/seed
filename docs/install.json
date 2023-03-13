@@ -1,0 +1,64 @@
+{
+	"version": 1,
+	"seed": {
+		"env": {
+			"chrootcmd": "systemd-nspawn -d {ROOTDIR} {COMMAND}"
+		},
+		"disks": [
+			{
+				"path": "/dev/vdb",
+				"action": "new",
+				"table": "gpt",
+				"partitions": [
+					{
+						"action": "create",
+						"size": "4GB",
+						"fs": "btrfs",
+						"fsargs": "-f",
+						"mount": "/",
+						"fstab": true
+					}
+				]
+			}
+		],
+		"installation": {
+			"pkglisturl": "https://api.acacialinux.org/?get=packagelist",
+			"packages": [
+				"base",
+				"bash",
+				"systemd",
+				"networkmanager",
+				"bash",
+				"leaf",
+				"default-password"
+			],
+			"force": true
+		},
+		"fstab": {
+			"mode": "uuid",
+			"path": "/etc/fstab"
+		},
+		"systemd": {
+			"enable-units": [
+				"sshd",
+				"seed",
+				"NetworkManager"
+			]
+		},
+		"symlinks": [
+			{
+				"/usr/bin/doas": "/usr/bin/sudo"
+			}
+		],
+		"time": {
+			"timezone": "Europe/Berlin"
+		},
+		"lang": {
+			"default": "en_US.UTF-8",
+			"locales": [
+				"en_US.UTF-8 UTF-8",
+				"de_DE.UTF-8 UTF-8"
+			]
+		}
+	}
+}
